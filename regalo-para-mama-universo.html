@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#100b2d">
+  <title>Un universo para mamá ✨</title>
+  <style>
+    :root {
+      --pink: #ff6fae;
+      --rose: #ff3d78;
+      --gold: #ffe7a3;
+      --night: #09071b;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: #fff7fb;
+      font-family: Georgia, "Times New Roman", serif;
+      background: var(--night);
+      overflow-x: hidden;
+    }
+    button { font: inherit; }
+    .screen {
+      min-height: 100svh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 18px;
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .stars, .stars::before, .stars::after {
+      position: absolute;
+      inset: 0;
+      content: "";
+      pointer-events: none;
+      background-image:
+        radial-gradient(2px 2px at 20px 30px, #fff 98%, transparent),
+        radial-gradient(1px 1px at 90px 80px, #ffe9fb 98%, transparent),
+        radial-gradient(2px 2px at 160px 140px, #f6c9ff 98%, transparent),
+        radial-gradient(1px 1px at 220px 40px, #fff 98%, transparent),
+        radial-gradient(1px 1px at 280px 190px, #ffcce4 98%, transparent);
+      background-size: 320px 240px;
+      opacity: .65;
+      animation: twinkle 4s ease-in-out infinite alternate;
+      z-index: -1;
+    }
+    .stars::before {
+      transform: scale(1.3);
+      opacity: .4;
+      animation-delay: -2s;
+    }
+    .stars::after {
+      transform: scale(.8);
+      opacity: .5;
+      animation-delay: -1s;
+    }
+    .nebula {
+      position: absolute;
+      width: min(90vw, 700px);
+      height: min(90vw, 700px);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle, #7c2b8d30 0%, #4923a344 28%, #e53e8b16 48%, transparent 70%);
+      filter: blur(15px);
+      z-index: -1;
+      animation: breathe 8s ease-in-out infinite alternate;
+    }
+    .intro-card {
+      width: min(100%, 520px);
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      padding: 30px 18px;
+      animation: appear 1.2s ease both;
+    }
+    .eyebrow {
+      color: #ffd5e7;
+      text-transform: uppercase;
+      letter-spacing: .22em;
+      font: 700 .72rem/1.5 Arial, sans-serif;
+    }
+    h1 {
+      margin: 14px 0;
+      font-size: clamp(2.4rem, 10vw, 4.5rem);
+      line-height: 1.03;
+      color: #fff2f8;
+      text-shadow: 0 0 22px #ff5ca777;
+    }
+    .intro-text {
+      max-width: 390px;
+      margin: 0 auto;
+      color: #e7d8f8;
+      font-size: 1.08rem;
+      line-height: 1.75;
+    }
+    .gift-button {
+      display: block;
+      width: 220px;
+      height: 220px;
+      margin: 30px auto 18px;
+      border: 0;
+      background: transparent;
+      position: relative;
+      cursor: pointer;
+      filter: drop-shadow(0 0 24px #ff4e9c44);
+      animation: hoverGift 3s ease-in-out infinite;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .gift-button:focus-visible {
+      outline: 3px solid #ffe6f1;
+      outline-offset: 8px;
+      border-radius: 20px;
+    }
+    .gift-box {
+      position: absolute;
+      width: 150px;
+      height: 105px;
+      bottom: 25px;
+      left: 35px;
+      border-radius: 5px 5px 15px 15px;
+      background: linear-gradient(100deg, #b51d64, #ff6fae 50%, #c32971);
+      box-shadow: inset 0 -10px 20px #7a0c5033, 0 14px 28px #0006;
+    }
+    .gift-box::before {
+      content: "";
+      position: absolute;
+      left: 59px;
+      top: 0;
+      width: 32px;
+      height: 100%;
+      background: linear-gradient(90deg, #ffda86, #fff0bd, #eab94f);
+    }
+    .gift-lid {
+      position: absolute;
+      z-index: 2;
+      left: 25px;
+      bottom: 124px;
+      width: 170px;
+      height: 32px;
+      border-radius: 7px;
+      background: linear-gradient(90deg, #d82f7a, #ff8db9, #ce286e);
+      box-shadow: 0 5px 12px #0004;
+      transition: transform .75s ease, opacity .6s ease;
+      transform-origin: 20% 90%;
+    }
+    .gift-lid::before {
+      content: "";
+      position: absolute;
+      left: 69px;
+      top: 0;
+      width: 32px;
+      height: 100%;
+      background: linear-gradient(90deg, #ffda86, #fff0bd, #eab94f);
+    }
+    .bow {
+      position: absolute;
+      z-index: 3;
+      top: 25px;
+      left: 76px;
+      font-size: 48px;
+      filter: drop-shadow(0 4px 5px #700b40aa);
+      transition: transform .7s ease, opacity .5s ease;
+    }
+    .gift-label {
+      position: absolute;
+      width: 100%;
+      left: 0;
+      bottom: -5px;
+      font-size: .95rem;
+      color: #ffe5f0;
+    }
+    .hint {
+      font: .88rem Arial, sans-serif;
+      color: #cbb8e8;
+      animation: blink 2s infinite;
+    }
+    .reveal {
+      display: none;
+      min-height: 100svh;
+      position: relative;
+      padding: 70px 18px 45px;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 50% 30%, #57257c55 0%, transparent 48%),
+        radial-gradient(ellipse at 15% 70%, #a01e6640 0%, transparent 40%),
+        linear-gradient(180deg, #09071b, #150c32 58%, #250b32);
+      text-align: center;
+      isolation: isolate;
+    }
+    .reveal.show { display: block; animation: revealIn 1.2s ease both; }
+    .reveal .stars { position: absolute; z-index: -1; }
+    .cosmic-orb {
+      position: absolute;
+      top: 7%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(88vw, 470px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 48% 48%, #ffd8f5 0 1%, #f7a7ff 2%, #a44fff 9%, #5523a8 24%, #f44c9c55 39%, transparent 68%);
+      filter: blur(1px);
+      opacity: .75;
+      z-index: -1;
+      animation: rotateOrb 40s linear infinite;
+    }
+    .cosmic-orb::before, .cosmic-orb::after {
+      content: "";
+      position: absolute;
+      inset: 18%;
+      border: 1px solid #f8d8ff77;
+      border-radius: 50%;
+      transform: rotateX(68deg) rotate(-25deg) scale(1.3, .65);
+      box-shadow: 0 0 18px #f78fff88;
+    }
+    .cosmic-orb::after {
+      inset: 10%;
+      transform: rotateX(68deg) rotate(45deg) scale(1.25, .55);
+      border-color: #ffb3d966;
+    }
+    .reveal-content {
+      position: relative;
+      max-width: 700px;
+      margin: 0 auto;
+      z-index: 1;
+    }
+    .burst {
+      font-size: clamp(2rem, 8vw, 4rem);
+      margin: 0 0 12px;
+      animation: float 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 15px #ff7bb6aa);
+    }
+    .reveal h2 {
+      font-size: clamp(2.5rem, 9vw, 4.8rem);
+      line-height: 1.08;
+      margin: 10px 0 16px;
+      color: #fff1fb;
+      text-shadow: 0 0 25px #ff5cb7aa;
+    }
+    .subtitle {
+      color: #f1d9ff;
+      line-height: 1.8;
+      font-size: 1.1rem;
+      max-width: 510px;
+      margin: 0 auto;
+    }
+    .rose-garden {
+      display: flex;
+      justify-content: center;
+      align-items: end;
+      gap: clamp(3px, 3vw, 18px);
+      margin: 28px auto 18px;
+      min-height: 120px;
+    }
+    .rose {
+      display: inline-block;
+      font-size: clamp(2.8rem, 12vw, 5.5rem);
+      filter: drop-shadow(0 0 15px #ff4f91aa);
+      animation: roseFloat 3.5s ease-in-out infinite;
+    }
+    .rose:nth-child(2) { animation-delay: -.8s; transform: translateY(-12px); }
+    .rose:nth-child(3) { animation-delay: -1.6s; }
+    .letter {
+      max-width: 570px;
+      margin: 30px auto 0;
+      padding: clamp(23px, 5vw, 38px);
+      border: 1px solid #ffb9db77;
+      border-radius: 24px;
+      background: linear-gradient(145deg, #fff8fcf2, #fce9f7f2);
+      color: #55213f;
+      box-shadow: 0 0 45px #e949a32b, inset 0 0 25px #ffb8d522;
+      line-height: 1.9;
+      animation: appear 1.3s .3s both;
+    }
+    .letter h3 {
+      color: #bd2e70;
+      font-size: clamp(1.55rem, 5vw, 2.2rem);
+      margin: 0 0 15px;
+    }
+    .letter p { font-size: 1.04rem; }
+    .personal {
+      margin: 22px 0;
+      padding: 18px;
+      border-left: 4px solid #e84b91;
+      border-radius: 8px;
+      background: #ffe6f1;
+      font-style: italic;
+      font-size: 1.12rem;
+    }
+    .sign {
+      color: #bf2d71;
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+    .love-button {
+      margin: 15px auto 0;
+      border: 0;
+      border-radius: 30px;
+      padding: 14px 22px;
+      color: #fff;
+      background: linear-gradient(90deg, #c92c72, #ed579b);
+      cursor: pointer;
+      box-shadow: 0 7px 22px #e8498a55;
+    }
+    .love-button:hover { filter: brightness(1.1); }
+    .heart {
+      position: fixed;
+      left: var(--left);
+      bottom: -45px;
+      z-index: 20;
+      pointer-events: none;
+      font-size: var(--size);
+      animation: floatUp var(--duration) linear forwards;
+    }
+    .flash {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      pointer-events: none;
+      background: white;
+      animation: flash 1s ease-out forwards;
+    }
+    .hidden { display: none !important; }
+    @keyframes twinkle { from { opacity: .3; } to { opacity: .8; } }
+    @keyframes breathe { from { transform: scale(.85); opacity: .65; } to { transform: scale(1.12); opacity: 1; } }
+    @keyframes hoverGift { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+    @keyframes appear { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes revealIn { from { opacity: 0; transform: scale(1.04); } to { opacity: 1; transform: scale(1); } }
+    @keyframes rotateOrb { to { transform: translateX(-50%) rotate(360deg); } }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    @keyframes roseFloat { 0%, 100% { translate: 0 0; } 50% { translate: 0 -10px; } }
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg) scale(.8); opacity: 0; }
+      12% { opacity: 1; }
+      100% { transform: translateY(-115vh) rotate(35deg) scale(1.3); opacity: 0; }
+    }
+    @keyframes flash { 0% { opacity: 0; } 15% { opacity: .95; } 100% { opacity: 0; } }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <section class="screen" id="intro">
+    <div class="stars"></div>
+    <div class="nebula"></div>
+    <div class="intro-card">
+      <div class="eyebrow">Un detalle desde el corazón</div>
+      <h1>Para ti,<br>mamá 💗</h1>
+      <p class="intro-text">
+        Guardé algo muy especial dentro de esta cajita.
+        ¿Estás lista para descubrirlo?
+      </p>
+
+      <button class="gift-button" id="giftButton" type="button" aria-label="Abrir la sorpresa para mamá">
+        <span class="bow" aria-hidden="true">🎀</span>
+        <span class="gift-lid" id="giftLid"></span>
+        <span class="gift-box"></span>
+        <span class="gift-label">Con todo mi amor</span>
+      </button>
+
+      <p class="hint">✨ Toca la cajita para abrir tu sorpresa ✨</p>
+    </div>
+  </section>
+
+  <section class="reveal" id="reveal" aria-hidden="true">
+    <div class="stars"></div>
+    <div class="cosmic-orb" aria-hidden="true"></div>
+    <div class="reveal-content">
+      <div class="burst" aria-hidden="true">🌌 ✨ 💫</div>
+      <p class="eyebrow">Una galaxia entera para la persona más especial</p>
+      <h2>¡Sorpresa,<br>mamá!</h2>
+      <p class="subtitle">
+        Si pudiera regalarte el universo, lo haría...
+        porque ni todas las estrellas brillan tanto como tú en mi vida.
+      </p>
+
+      <div class="rose-garden" aria-label="Rosas para mamá">
+        <span class="rose">🌹</span>
+        <span class="rose">🌹</span>
+        <span class="rose">🌹</span>
+      </div>
+
+      <article class="letter">
+        <h3>Mi querida mamá ❤️</h3>
+        <p>
+          Hoy quiero regalarte algo que nace de lo más profundo de mi corazón.
+          Tal vez sea una pequeña página, pero está llena de un amor inmenso:
+          el amor que siento por ti.
+        </p>
+        <div class="personal">
+          Gracias por todos tus sacrificios y por quererme siempre.
+        </div>
+        <p>
+          Gracias por cada esfuerzo, por tus consejos, por tu paciencia
+          y por darme tu amor incluso en los momentos difíciles.
+          Puede que no siempre encuentre las palabras para agradecerte,
+          pero nunca dejes de saber lo importante que eres para mí.
+        </p>
+        <p>
+          Si pudiera, pondría una estrella en el cielo por cada cosa
+          maravillosa que has hecho por mí. Y aun así, no alcanzaría
+          todo el universo para devolverte tanto amor.
+        </p>
+        <p>
+          No importa cuánto cambie la vida ni la distancia que exista:
+          siempre tendrás un lugar irremplazable en mi corazón.
+        </p>
+        <h3>Te amo hasta el infinito y más allá. 🌠</h3>
+        <p class="sign">Con todo mi amor, tu hijo. 💖</p>
+        <button class="love-button" id="loveButton" type="button">
+          ¡Llenar el universo de amor! 💕
+        </button>
+        <p id="finalMessage" class="sign hidden">🌹 Esta galaxia siempre será tuya, mamá. 🌹</p>
+      </article>
+    </div>
+  </section>
+
+  <script>
+    const giftButton = document.getElementById("giftButton");
+    const giftLid = document.getElementById("giftLid");
+    const intro = document.getElementById("intro");
+    const reveal = document.getElementById("reveal");
+    const loveButton = document.getElementById("loveButton");
+    const finalMessage = document.getElementById("finalMessage");
+    let opened = false;
+
+    function makeHearts(count) {
+      const symbols = ["❤️", "💖", "💕", "🌹", "✨", "💫", "🌸"];
+      for (let i = 0; i < count; i++) {
+        const item = document.createElement("span");
+        item.className = "heart";
+        item.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        item.style.setProperty("--left", Math.random() * 100 + "vw");
+        item.style.setProperty("--size", (18 + Math.random() * 26) + "px");
+        item.style.setProperty("--duration", (3 + Math.random() * 3.5) + "s");
+        document.body.appendChild(item);
+        item.addEventListener("animationend", () => item.remove());
+      }
+    }
+
+    function openSurprise() {
+      if (opened) return;
+      opened = true;
+
+      giftButton.style.animation = "none";
+      giftLid.style.transform = "translate(-35px, -95px) rotate(-35deg)";
+      giftLid.style.opacity = "0";
+      giftButton.querySelector(".bow").style.transform = "translate(-30px, -75px) rotate(-35deg)";
+      giftButton.querySelector(".bow").style.opacity = "0";
+
+      const flash = document.createElement("div");
+      flash.className = "flash";
+      document.body.appendChild(flash);
+      flash.addEventListener("animationend", () => flash.remove());
+
+      makeHearts(65);
+      setTimeout(() => {
+        intro.classList.add("hidden");
+        reveal.classList.add("show");
+        reveal.setAttribute("aria-hidden", "false");
+        window.scrollTo({ top: 0, behavior: "instant" });
+        makeHearts(30);
+      }, 450);
+    }
+
+    giftButton.addEventListener("click", openSurprise);
+
+    loveButton.addEventListener("click", () => {
+      makeHearts(80);
+      finalMessage.classList.remove("hidden");
+      loveButton.textContent = "¡Te amo hasta el infinito, mamá! ❤️";
+    });
+  </script>
+</body>
+</html>
